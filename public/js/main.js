@@ -14,7 +14,7 @@ socket.emit("joinRoom", { username, room });
 //Get Current Online User
 
 socket.on("onlineUsers", (users) => {
-  console.log(users);
+  outputOnlineUser(users);
 });
 
 // Message from server
@@ -38,4 +38,16 @@ const outputMsg = (msg) => {
   div.classList.add("message-container");
   div.innerHTML = `<p class="username">${msg.userName}</p><p class="msg-time">${msg.time}</p><p class="message">${msg.msg}</p>`;
   document.getElementById("chat-container").appendChild(div);
+};
+const outputOnlineUser = (users) => {
+  const div = document.createElement("div");
+  div.classList.add("online-user-container");
+  const ul = document.createElement("ul");
+  users.forEach((user) => {
+    const li = document.createElement("li");
+    li.innerHTML = user.username;
+    ul.appendChild(li);
+  });
+  div.appendChild(ul);
+  document.getElementById("online-user").innerHTML = div.outerHTML;
 };

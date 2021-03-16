@@ -7,18 +7,26 @@ const userJoin = (id, username, room) => {
   return user;
 };
 
-const curUser = (id) => {
-  // find each user in users, and return the user that has the id passed in
-  return users.find((user) => user.id === id);
+// const curUser = (id) => {
+//   // find each user in users, and return the user that has the id passed in
+//   return users.find((user) => user.id === id);
+// };
+
+const userLeave = (id) => {
+  // if not found return -1
+  const index = users.findIndex((user) => user.id === id);
+  if (index !== -1) {
+    return users.splice(index, 1);
+  }
 };
 
-const getCurrentOnlineUser = () => {
-  console.log(users);
-  return users;
+const getCurrentOnlineUser = (room) => {
+  return users.filter((user) => user.room === room);
 };
 
 module.exports = {
   userJoin,
-  curUser,
+  // curUser,
+  userLeave,
   getCurrentOnlineUser,
 };

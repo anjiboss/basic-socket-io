@@ -11,7 +11,12 @@ const io = socketIo(server);
 
 // Utils
 const formatMsg = require("./utils/message");
-const { userJoin, curUser, getCurrentOnlineUser } = require("./utils/users");
+const {
+  userJoin,
+  // curUser,
+  getCurrentOnlineUser,
+  userLeave,
+} = require("./utils/users");
 
 const chatBot = "Chat Bot";
 app.use(express.static(path.join(__dirname, "public")));
@@ -24,7 +29,7 @@ io.on("connection", (socket) => {
     socket.join(user.room);
 
     //Send current online user(s)
-    io.emit("onlineUsers", getCurrentOnlineUser());
+    io.emit("onlineUsers", getCurrentOnlineUser(user.room));
 
     // Send ONLY to the connected user
     socket.emit(
@@ -46,6 +51,8 @@ io.on("connection", (socket) => {
     });
     //Runs when client disconnect
     socket.on("disconnect", () => {
+      userLeave(user.id);
+      io.emit("onlineUsers", getCurrentOnlineUser(user.room));
       io.to(user.room).emit(
         "message",
         formatMsg(chatBot, "A " + user.username + " has disconnected")

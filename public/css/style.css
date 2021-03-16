@@ -32,3 +32,12 @@
   color: rgb(0, 0, 0);
   font-size: 1rem;
 }
+
+.online-user-container {
+  margin-left: 70vw;
+  width: 30vw;
+}
+
+.online-user-container li::marker {
+  color: green;
+}
