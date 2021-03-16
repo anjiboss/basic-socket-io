@@ -11,29 +11,46 @@ const io = socketIo(server);
 
 // Utils
 const formatMsg = require("./utils/message");
+const { userJoin, curUser, getCurrentOnlineUser } = require("./utils/users");
 
 const chatBot = "Chat Bot";
 app.use(express.static(path.join(__dirname, "public")));
 
 // Run when Client Connected
 io.on("connection", (socket) => {
-  // Send ONLY to the connected user
-  socket.emit("message", formatMsg(chatBot, "welcome to Chat"));
+  socket.on("joinRoom", ({ username, room }) => {
+    const user = userJoin(socket.id, username, room);
 
-  // Send to OTHER connected user
-  socket.broadcast.emit(
-    "message",
-    formatMsg(chatBot, "A user has joined the chat")
-  );
+    socket.join(user.room);
 
-  //Runs when client disconnect
-  socket.on("disconnect", () => {
-    io.emit("message", formatMsg(chatBot, "A user has disconnected"));
-  });
+    //Send current online user(s)
+    io.emit("onlineUsers", getCurrentOnlineUser());
 
-  //Catch the message
-  socket.on("chatMessage", (msg) => {
-    io.emit("message", formatMsg("User", msg));
+    // Send ONLY to the connected user
+    socket.emit(
+      "message",
+      formatMsg(chatBot, "welcome " + user.username + " Chat")
+    );
+
+    // Send to OTHER connected user
+    socket.broadcast
+      .to(user.room)
+      .emit(
+        "message",
+        formatMsg(chatBot, "A " + user.username + " has joined the chat")
+      );
+
+    //Catch the message
+    socket.on("chatMessage", (msg) => {
+      io.to(user.room).emit("message", formatMsg(user.username, msg));
+    });
+    //Runs when client disconnect
+    socket.on("disconnect", () => {
+      io.to(user.room).emit(
+        "message",
+        formatMsg(chatBot, "A " + user.username + " has disconnected")
+      );
+    });
   });
 
   // Send to ALL the Client

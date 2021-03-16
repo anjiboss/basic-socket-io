@@ -3,11 +3,24 @@ const chatMessageDiv = document.getElementById("chat-container");
 //Socket Connection
 const socket = io();
 
+//Get Username and Room from URL
+//Using QS
+const { username, room } = Qs.parse(location.search, {
+  ignoreQueryPrefix: true,
+});
+
+socket.emit("joinRoom", { username, room });
+
+//Get Current Online User
+
+socket.on("onlineUsers", (users) => {
+  console.log(users);
+});
+
 // Message from server
 socket.on("message", (msg) => {
   outputMsg(msg);
   chatMessageDiv.scrollTop = chatMessageDiv.scrollHeight;
-  console.log(msg);
 });
 
 //Message Submit
