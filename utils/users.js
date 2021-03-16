@@ -15,8 +15,11 @@ const userJoin = (id, username, room) => {
 const userLeave = (id) => {
   // if not found return -1
   const index = users.findIndex((user) => user.id === id);
+
   if (index !== -1) {
-    return users.splice(index, 1);
+    // remove (1) item at index --(index, 1)
+    users.splice(index, 1);
+    return users;
   }
 };
 
