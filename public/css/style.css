@@ -1,6 +1,34 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 #chat-container {
+  padding-top: 30px;
   width: 500px;
   height: 60vh;
   margin: auto;
   overflow: scroll;
+}
+.message-container {
+  border-radius: 10px;
+  width: fit-content;
+  background: rgb(169, 169, 197);
+  padding: 5px 5px 2px 5px;
+  text-align: right;
+  margin: 5px 2px;
+}
+.username {
+  color: rgb(172, 125, 199);
+  font-size: 0.75rem;
+}
+
+.msg-time {
+  color: rgb(87, 78, 92);
+  font-size: 0.5rem;
+}
+.message {
+  color: rgb(0, 0, 0);
+  font-size: 1rem;
 }
